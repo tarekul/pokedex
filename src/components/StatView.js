@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom'
 import axios from 'axios'
 import './StatView.css';
 import MoveInfo from './MoveInfo'
@@ -210,7 +211,7 @@ class StatView extends Component {
       <>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
-            <li className="breadcrumb-item" onClick={this.toList}><a href="/">Home</a></li>
+            <li className="breadcrumb-item" onClick={this.toList}><Link to='/'>Home</Link></li>
             <li className="breadcrumb-item active" aria-current="page">{this.props.pokemon}</li>
           </ol>
         </nav>

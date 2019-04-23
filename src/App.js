@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {HashRouter, Route} from 'react-router-dom'
 import StatView from './components/StatView';
 import Search from './components/Search'
 import Pokelist from './components/Pokelist'
@@ -12,27 +13,12 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      /* initial state is generated in the componentdidmount function */
-      /* this is example state */
-      // offset:0,
-      // currentPokemon: '',
-      // currentPage: 'list', //OR stat 
-      // results: [
-      //   {
-      //     "name": "bulbasaur",
-      //     "url": "https://pokeapi.co/api/v2/pokemon/1/"
-      //   },
-      //   {
-      //     "name": "ivysaur",
-      //     "url": "https://pokeapi.co/api/v2/pokemon/2/"
-      //   },
-      //]
+      
     }
 
   }
 
   componentDidMount() {
-     console.log('mounted')
     axios.get(`https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20`)
       .then(response => {
         if (localStorage.getItem('currentPage') === null) {
@@ -70,7 +56,7 @@ class App extends Component {
     if (this.state.currentPage === 'list') {
       localStorage.setItem('currentPokemon', this.state.currentPokemon);
       return <>
-        <Pokelist results={this.state.results} changeState={this.changeState} offset={this.state.offset} />
+        <Route path='/' exact render={()=><Pokelist results={this.state.results} changeState={this.changeState} offset={this.state.offset} />} />
       </>
     }
     else {
@@ -79,7 +65,7 @@ class App extends Component {
         localStorage.setItem('currentPage', 'stat');
       }
       return <>
-        <StatView toList={this.toList} pokemon={this.state.currentPokemon} />
+        <Route path='/' exact render={()=><StatView toList={this.toList} pokemon={this.state.currentPokemon} />} />
       </>
     }
   }
@@ -89,8 +75,10 @@ class App extends Component {
   render() {
     return (
       <>
-        <Search pokemons={pokemons} changeState={this.changeState} />
+      <HashRouter>
+        <Route path='/' render={()=> <Search pokemons={pokemons} changeState={this.changeState} /> } />
         <this.View />
+      </HashRouter>
       </>
     )
   }
