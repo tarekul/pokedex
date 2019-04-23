@@ -6,6 +6,7 @@ import MoveInfo from './MoveInfo'
 class StatView extends Component {
   constructor(props) {
     super(props)
+    console.log(this.props)
     this.state = {
       sprites: [],
       hp: 0,
@@ -18,7 +19,7 @@ class StatView extends Component {
       movesMethod: [],
       types: [],
       currentMove: '',
-      id: 0,
+      id: 0
     }
   }
   //Takes in pokemon name
@@ -31,6 +32,9 @@ class StatView extends Component {
       else {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
           .then(res => {
+            let id = res.data.id
+            if(parseInt(id) < 100) id = '0' + id
+            if(parseInt(id) < 10) id = '0' + id 
             let data = res.data;
             let sprites = [data.sprites.front_default, data.sprites.front_shiny, data.sprites.back_default, data.sprites.back_shiny];
             let moveList = [];
@@ -54,6 +58,7 @@ class StatView extends Component {
               moves: moveList,
               movesMethod: moveMethod,
               types: type,
+              id:id
             })
           })
       }
@@ -64,11 +69,11 @@ class StatView extends Component {
     let prefix = ''
     //id 1 - 9 add 00
     if (this.state.id < 10) {
-      prefix = '00';
+      prefix = '';
     }
     //id greater 9 < 100 add 0
     else if (this.state.id < 100) {
-      prefix = '0';
+      prefix = '';
     }
     //id 100 and up don't add anything
     return prefix + this.state.id
@@ -127,30 +132,25 @@ class StatView extends Component {
     return this.state.moves.map((e, i) => {
       if (this.state.movesMethod[i] === 'egg') {
         return (
-          <div className='col-3 pt-1 pb-1 d-flex justify-content-around border border-2 border-info rounded-pill moves' key={i} onClick={this.getMoves}>
-            {e}
-          </div>
+          <button type="button" class="btn btn-primary" style={{marginLeft:'1%',marginTop:'1%'}} key={i} onClick={this.getMoves}>{e}</button>
+          
         )
       }
       if (this.state.movesMethod[i] === 'machine') {
         return (
-          <div className='col-3 pt-1 pb-1 d-flex justify-content-around border border-2 border-success rounded-pill moves' key={i} onClick={this.getMoves}>
-            {e}
-          </div>
+          <button type="button" class="btn btn-success" style={{marginLeft:'1%',marginTop:'1%'}} key={i} onClick={this.getMoves}>{e}</button>
+          
         )
       }
       if (this.state.movesMethod[i] === 'tutor') {
         return (
-          <div className='col-3 pt-1 pb-1 d-flex justify-content-around border border-2 border-warning rounded-pill moves' key={i} onClick={this.getMoves}>
-            {e}
-          </div>
+          <button type="button" class="btn btn-info" style={{marginLeft:'1%',marginTop:'1%'}} key={i} onClick={this.getMoves}>{e}</button>
+          
         )
       }
       if (this.state.movesMethod[i] === 'level-up') {
         return (
-          <div className='col-3 pt-1 pb-1 d-flex justify-content-around border border-2 border-purple rounded-pill moves' key={i} onClick={this.getMoves}>
-            {e}
-          </div>
+          <button type="button" class="btn btn-light" style={{marginLeft:'1%',marginTop:'1%'}} key={i} onClick={this.getMoves}>{e}</button>
         )
       }
       return <></>
@@ -196,18 +196,21 @@ class StatView extends Component {
   }
   componentDidMount() {
     this.getPokemon(this.props.pokemon)
+    
+  
   }
   componentDidUpdate(prevProps) {
     if (this.props.pokemon !== prevProps.pokemon) {
       this.getPokemon(this.props.pokemon)
     }
+    
   }
   render() {
     return (
       <>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
-            <li className="breadcrumb-item" onClick={this.toList}><a href="#backhome">Home</a></li>
+            <li className="breadcrumb-item" onClick={this.toList}><a href="/">Home</a></li>
             <li className="breadcrumb-item active" aria-current="page">{this.props.pokemon}</li>
           </ol>
         </nav>
@@ -223,10 +226,10 @@ class StatView extends Component {
         <div className='container'>
           <h2 className='title '>Moves</h2>
           <span className='sub-title'>Learned by </span>
-          <span className='sub-title text-info'>Egg </span>
+          <span className='sub-title text-primary'>Egg </span>
           <span className='sub-title text-success'>Machine </span>
-          <span className='sub-title text-warning'>Tutor </span>
-          <span className='sub-title text-purple'>Level-up </span>
+          <span className='sub-title text-info'>Tutor </span>
+          <span className='sub-title text-dark'>Level-up </span>
           <p></p>
           <div className='row flex-wrap '>
             <this.MoveList />

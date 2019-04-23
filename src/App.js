@@ -32,15 +32,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // console.log('mounted')
+     console.log('mounted')
     axios.get(`https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20`)
       .then(response => {
         if (localStorage.getItem('currentPage') === null) {
           this.setState({
             offset: 0, currentPokemon: localStorage.getItem('currentPokemon'),
             currentPage: 'list',
-            results: response.data.results,
-            num: 0
+            results: response.data.results
           })
         }
         else {
@@ -53,6 +52,8 @@ class App extends Component {
         }
       })
   }
+
+  
 
   toList = () => {
     localStorage.setItem('currentPage', 'list');

@@ -1,12 +1,14 @@
 import React, {Component} from 'react'
 import './Search.css'
+import Axios from 'axios';
 
 
 class Component1 extends Component{
     constructor(props){
         super(props)
         this.state = {
-            search:[]
+            search:[],
+            showDropdown:false
         }
     }
 
@@ -43,9 +45,26 @@ class Component1 extends Component{
 
     createElementforDropD = () =>{
         if(this.state.search.length !== 0){
-            return <div id='overlay' className="card border-light mb-3">
+            return <div id='overlay' className="card border-light mb-3" style={{position:'absolute'}}>
                 <div class="card-body text-light">
-                {this.state.search.map(poke=>{return <p onClick={e=>{this.props.changeState({currentPokemon:poke.toLowerCase(),currentPage:'stat'})}} class="card-text">{poke}</p>})}
+                {this.state.search.map(poke=>{
+                    //console.log(poke)
+                    return <p onClick={e=>{
+                        this.setState({search:[]})
+                        Axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.toLowerCase()}`)
+                        .then(response=>{
+                            let {id} = response.data
+                            if(id < 10) id = '00' + id
+                            else if(id >= 10 && id < 100) id = '0' + id
+                            //this.setState({search:[]})
+                            this.props.changeState({currentPokemon:poke.toLowerCase(),num:id,currentPage:'stat'})
+                        })
+                        
+                    
+                        }
+                    
+                            } class="card-text">{poke}</p>})
+                    }
                 </div>
                 </div>
         }
@@ -54,7 +73,7 @@ class Component1 extends Component{
 
     render(){
         return <>
-        <div className="row myrow">
+        <div className="row myrow" onClick={e=>{this.setState({search:[]})}}>
             <div className="col-12 topred"></div>
         <div className="col-2">
             <img style={{float:'left'}} className='img' alt='pokeball' src="https://i.ebayimg.com/images/g/HCgAAOxy63FSrBOH/s-l300.jpg"/>
